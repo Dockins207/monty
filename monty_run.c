@@ -7,9 +7,6 @@ int is_empty_line(char *line, char *delims);
 void (*get_op_func(char *opcode))(stack_t**, unsigned int);
 int run_monty(FILE *script_fd);
 
-/**
- * free_tokens - Frees the global op_toks array of strings.
- */
 void free_tokens(void)
 {
 	size_t i = 0;
@@ -23,26 +20,16 @@ void free_tokens(void)
 	free(op_toks);
 }
 
-/**
- * token_arr_len - Gets the length of current op_toks.
- * Return: Length of current op_toks (as int).
- */
 unsigned int token_arr_len(void)
 {
 	unsigned int toks_len = 0;
 
 	while (op_toks[toks_len])
 		toks_len++;
+
 	return (toks_len);
 }
 
-/**
- * is_empty_line - Checks if a line read from getline only contains delimiters.
- * @line: A pointer to the line.
- * @delims: A string of delimiter characters.
- * Return: If the line only contains delimiters - 1.
- *         Otherwise - 0.
- */
 int is_empty_line(char *line, char *delims)
 {
 	int i, j;
@@ -61,11 +48,6 @@ int is_empty_line(char *line, char *delims)
 	return (1);
 }
 
-/**
- * get_op_func - Matches an opcode with its corresponding function.
- * @opcode: The opcode to match.
- * Return: A pointer to the corresponding function.
- */
 void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 {
 	instruction_t op_funcs[] = {
@@ -99,18 +81,14 @@ void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 	return (NULL);
 }
 
-/**
- * run_monty - Primary function to execute a Monty bytecodes script.
- * @script_fd: File descriptor for an open Monty bytecodes script.
- * Return: EXIT_SUCCESS on success, respective error code on failure.
- */
 int run_monty(FILE *script_fd)
 {
 	stack_t *stack = NULL;
 	char *line = NULL;
-	size_t len = 0, exit_status = EXIT_SUCCESS;
+	size_t exit_status = EXIT_SUCCESS;
 	unsigned int line_number = 0, prev_tok_len = 0;
 	void (*op_func)(stack_t**, unsigned int);
+	int value;
 
 	if (init_stack(&stack) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
@@ -118,13 +96,14 @@ int run_monty(FILE *script_fd)
 	while ((value = get_int(script_fd)) != -1)
 	{
 		line_number++;
-		op_toks = strtow(line, DELIMS);
+		op_toks = strtow(op_toks[0], DELIMS);
 		if (op_toks == NULL)
 		{
 			if (is_empty_line(line, DELIMS))
 				continue;
 			free_stack(&stack);
-			return (malloc_error());
+			exit_status = malloc_error();
+			break;
 		}
 		else if (op_toks[0][0] == '#') /* comment line */
 		{
@@ -154,7 +133,7 @@ int run_monty(FILE *script_fd)
 	}
 	free_stack(&stack);
 
-	if (line && *line == 0)
+	if (line == NULL || *line == '\0')
 	{
 		free(line);
 		return (malloc_error());
