@@ -13,13 +13,6 @@ void open_file(char *file_name)
 	fclose(fd);
 }
 
-
-/**
- * read_file - reads a file
- * @fd: pointer to file descriptor
- * Return: void
- */
-
 void read_file(FILE *fd)
 {
 	int line_number, format = 0;
@@ -32,17 +25,6 @@ void read_file(FILE *fd)
 	}
 	free(buffer);
 }
-
-
-/**
- * parse_line - Separates each line into tokens to determine
- * which function to call
- * @buffer: line from the file
- * @line_number: line number
- * @format:  storage format. If 0 Nodes will be entered as a stack.
- * if 1 nodes will be entered as a queue.
- * Return: Returns 0 if the opcode is stack. 1 if queue.
- */
 
 int parse_line(char *buffer, int line_number, int format)
 {
@@ -66,15 +48,6 @@ int parse_line(char *buffer, int line_number, int format)
 	return (format);
 }
 
-/**
- * find_func - find the appropriate function for the opcode
- * @opcode: opcode
- * @value: argument of opcode
- * @format:  storage format. If 0 Nodes will be entered as a stack.
- * @ln: line number
- * if 1 nodes will be entered as a queue.
- * Return: void
- */
 void find_func(char *opcode, char *value, int ln, int format)
 {
 	int i;
@@ -114,16 +87,6 @@ void find_func(char *opcode, char *value, int ln, int format)
 		err(3, ln, opcode);
 }
 
-
-/**
- * call_fun - Calls the required function.
- * @func: Pointer to the function that is about to be called.
- * @op: string representing the opcode.
- * @val: string representing a numeric value.
- * @ln: line numeber for the instruction.
- * @format: Format specifier. If 0 Nodes will be entered as a stack.
- * if 1 nodes will be entered as a queue.
- */
 void call_fun(op_func func, char *op, char *val, int ln, int format)
 {
 	stack_t *node;
