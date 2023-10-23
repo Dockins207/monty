@@ -11,12 +11,6 @@ void nop(stack_t **stack, unsigned int line_number)
 	(void)line_number;
 }
 
-
-/**
- * swap_nodes - Swaps the top two elements of the stack.
- * @stack: Pointer to a pointer pointing to top node of the stack.
- * @line_number: Interger representing the line number of of the opcode.
- */
 void swap_nodes(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp;
